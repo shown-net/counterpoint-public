@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "counterpoint"
+version = "0.1.0"
+description = "Use Hardware Event Counters to Refute and Refine Microarchitectural Assumptions"
+authors = ["Nick Lindsay <nick.lindsay@yale.edu>"]
+readme = "README.md"
+packages = [{ include = "counterpoint" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11.6"
+pandas = ">=2.0.3"
+pexpr = { path = "external/Pexpr", develop = true, extras = ["dev"] }
+upath = { path = "external/upath", develop = true, extras = ["dev"] }
+
+[tool.poetry.group.dev.dependencies]
+# Add any dev-only dependencies here
+
+[build-system]
+requires = ["poetry-core>=1.8.0"]
+build-backend = "poetry.core.masonry.api"
