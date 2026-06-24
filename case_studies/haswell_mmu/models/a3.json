@@ -1,0 +1,14 @@
+{
+    "name": "a3",
+    "features": [
+        "Pml4eCache",
+        "PfLoadT",
+        "EarlyPsc",
+        "Merging",
+        "PmhAbort",
+        "AbortPmh",
+        "AbortPsc",
+        "AbortStlb",
+        "PfSpecT"
+    ]
+}

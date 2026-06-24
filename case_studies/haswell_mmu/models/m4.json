@@ -1,0 +1,10 @@
+{
+    "name": "m4",
+    "features": [
+        "Pml4eCache",
+        "EarlyPsc",
+        "Merging",
+        "WalkBypass",
+        "PfSpecT"
+    ]
+}

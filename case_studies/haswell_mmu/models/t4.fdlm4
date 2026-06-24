@@ -1,0 +1,422 @@
+# Features PSC cache lookup before PMH, miss merging, and walk bypassing. Assumes that
+# TLB prefetches are only triggered by store micro-ops that miss the DTLB.
+
+# Includes PML4E cache.
+
+ACTIONS {
+    # Prefetch
+    TlbPrefetch;
+
+    # TLBs
+    LookupDtlb;
+    LookupStlb;
+
+    # Page table walk
+    InitiateWalk;
+    MergeWalk;
+    BypassWalk;
+
+    # Paging structure caches and CR3
+    LookupPdeCache;
+    LookupPdpteCache;
+    LookupPml4eCache;
+    LookupCr3;
+
+    # Page miss handler memory accesses
+    PmhPml4eLookup;
+    PmhPdpteLookup;
+    PmhPdeLookup;
+    PmhPteLookup;
+
+    # Op flow
+    OpSquash;
+    OpRetirement;
+}
+
+COUNTER_GROUPS {
+    dtlb_load_misses.stlb_hit :
+        dtlb_load_misses.stlb_hit_4k,
+        dtlb_load_misses.stlb_hit_2m;
+
+    dtlb_store_misses.stlb_hit :
+        dtlb_store_misses.stlb_hit_4k,
+        dtlb_store_misses.stlb_hit_2m;
+
+    dtlb_load_misses.walk_completed :
+        dtlb_load_misses.walk_completed_4k,
+        dtlb_load_misses.walk_completed_2m_4m,
+        dtlb_load_misses.walk_completed_1g;
+
+    dtlb_store_misses.walk_completed :
+        dtlb_store_misses.walk_completed_4k,
+        dtlb_store_misses.walk_completed_2m_4m,
+        dtlb_store_misses.walk_completed_1g;
+}
+
+FLOW {
+    # Assume micro-op is either a load or a store
+
+    # Lookup DTLB
+    do LookupDtlb;
+
+    switch DtlbLookupStatus {
+        Hit => next dtlb_hit;
+        Miss => next dtlb_miss;
+    };
+
+dtlb_hit:
+    # Enumerate the allowed combinations for the DTLB
+    switch AccessType {
+        Load =>
+            switch PageSize {
+                KB4 => pass;
+                MB2 => pass;
+                GB1 => pass;
+            };
+        Store =>
+            switch PageSize {
+                KB4 => pass;
+                MB2 => pass;
+                GB1 => pass;
+            };
+    };
+
+    next end_of_op_lifetime;
+
+dtlb_miss:
+    # A DTLB miss has occured.
+
+    # Load DTLB misses may trigger a prefetch
+    switch AccessType {
+        Load => next main_sequence;
+        Store => next may_trigger_prefetch;
+    };
+
+may_trigger_prefetch:
+    # This micro-op may trigger a TLB prefetch
+    switch PrefetchTriggered {
+        Yes => next tlb_prefetch;
+        No => next main_sequence;
+    };
+
+tlb_prefetch:
+    # The access triggers a TLB prefetch.
+    do TlbPrefetch;
+
+    # Assume that TLB prefetches only increment the page_walker_loads counter, and
+    # that each prefetch may make between 0 and 4 accesses.
+    switch PrefetchAccesses {
+        Zero  => next tlb_prefetch_0_access;
+        One   => next tlb_prefetch_1_access;
+        Two   => next tlb_prefetch_2_accesses;
+        Three => next tlb_prefetch_3_accesses;
+        Four  => next tlb_prefetch_4_accesses;
+    };
+
+tlb_prefetch_4_accesses:
+    incr page_walker_loads;
+
+tlb_prefetch_3_accesses:
+    incr page_walker_loads;
+
+tlb_prefetch_2_accesses:
+    incr page_walker_loads;
+
+tlb_prefetch_1_access:
+    incr page_walker_loads;
+
+tlb_prefetch_0_access:
+    next main_sequence;
+
+main_sequence:
+    # After injecting any additional TLB prefetech accesses, return to the demand micro-op
+    # looking up the STLB.
+
+    # Look up the STLB
+    do LookupStlb;
+    switch StlbLookupStatus {
+        Hit => next stlb_hit;
+        Miss => next stlb_miss;
+    };
+
+stlb_hit:
+    # The micro-op or prefetch hits the STLB
+    switch AccessType {
+        Load =>
+            switch PageSize {
+                KB4 => incr dtlb_load_misses.stlb_hit_4k;
+                MB2 => incr dtlb_load_misses.stlb_hit_2m;
+            };
+            incr dtlb_load_misses.stlb_hit;
+            next end_of_op_lifetime;
+        Store =>
+            switch PageSize {
+                KB4 => incr dtlb_store_misses.stlb_hit_4k;
+                MB2 => incr dtlb_store_misses.stlb_hit_2m;
+            };
+            incr dtlb_store_misses.stlb_hit;
+            next end_of_op_lifetime;
+    };
+
+stlb_miss:
+    pass;
+
+    # Assume a 4-level page table walk with PDE and PDPTE paging structure
+    # caches.
+
+    # Look up the paging structure caches
+
+psc_lookup:
+    # PDE cache
+    do LookupPdeCache;
+ifdef(`PSC_COUNTERS',`    switch AccessType {
+        Load  => incr dtlb_load_misses.pde_cache_lookup;
+        Store => incr dtlb_store_misses.pde_cache_lookup;
+    };')
+    switch PdeCacheLookupStatus {
+        Hit => next psc_lookup_complete;
+        Miss => pass;
+    };
+
+    # PDE cache miss
+    switch AccessType {
+        Load  => incr dtlb_load_misses.pde_cache_miss;
+        Store => incr dtlb_store_misses.pde_cache_miss;
+    };
+
+    # PML4E cache
+    do LookupPml4eCache;
+    switch Pml4eCacheLookupStatus {
+        Hit => next psc_lookup_complete;
+        Miss => pass;
+    };
+
+    # PDPTE cache
+    do LookupPdpteCache;
+ifdef(`PSC_COUNTERS',`    switch AccessType {
+        Load  => incr dtlb_load_misses.pdpte_cache_lookup;
+        Store => incr dtlb_store_misses.pdpte_cache_lookup;
+    };')
+    switch PdpteCacheLookupStatus {
+        Hit => next psc_lookup_complete;
+        Miss => pass;
+    };
+
+ifdef(`PSC_COUNTERS',`    # PDPTE cache miss
+    switch AccessType {
+        Load  => incr dtlb_load_misses.pdpte_cache_miss;
+        Store => incr dtlb_store_misses.pdpte_cache_miss;
+    };
+')
+
+    # Look up CR3
+    do LookupCr3;
+
+psc_lookup_complete:
+    pass;
+
+arrive_at_pmh:
+    # Translation request reaches the page miss handler (PMH)
+
+    # Translation requests have the opportunity to merge into a single walk
+    switch MergeWalk {
+        Yes => next merge_walk;
+        No => next initiate_walk;
+    };
+
+merge_walk:
+    # The translation request is merged into an ongoing walk
+    do MergeWalk;
+
+    # Micro-ops which are merged into a page table walk which completes may retire.
+    # Otherwise, the merged walk was unsuccessful and so the micro-op is squashed.
+    switch MergedWalkOutcome {
+        Completes =>
+            switch AccessType {
+                Load => next end_of_op_lifetime;
+                Store => next end_of_op_lifetime;
+            };
+        Invalid =>
+            switch AccessType {
+                Load =>
+                    do OpSquash;
+                    done;
+                Store =>
+                    do OpSquash;
+                    done;
+            };
+    };
+
+initiate_walk:
+    # The translation request initiates a new walk (it is not merged with existing walks)
+    do InitiateWalk;
+
+    # Page table walks may be "bypassed" (e.g. complete without making a memory access)
+    switch BypassWalk {
+        Yes => do BypassWalk;
+        No => pass;
+    };
+
+    # Increment the "miss causes a walk" counters (does not apply to TLB prefetch)
+    switch AccessType {
+        Load => incr dtlb_load_misses.miss_causes_a_walk;
+        Store => incr dtlb_store_misses.miss_causes_a_walk;
+    };
+
+    # Skip levels of page table walk depending on outcome of looking up PSC
+    switch PdeCacheLookupStatus {
+        Hit => next lookup_pte;
+        Miss =>
+            switch PdpteCacheLookupStatus {
+                Hit => next lookup_pde;
+                Miss =>
+                    switch Pml4eCacheLookupStatus {
+                        Hit => next lookup_pdpte;
+                        Miss => next lookup_pml4e;
+                    };
+            };
+    };
+
+lookup_pml4e:
+    # Bypassed walks do not make any visible memory accesses
+    switch BypassWalk {
+        Yes => pass;
+        No =>
+            # Look up PML4E in memory hierarchy
+            do PmhPml4eLookup;
+            incr page_walker_loads;
+    };
+
+    # The PML4E is either valid or invalid (leaf is not allowed)
+    switch Pml4eStatus {
+        NotLeaf => pass;
+        Invalid => next invalid_page_table_entry;
+    };
+
+lookup_pdpte:
+    # Bypassed walks do not make any visible memory accesses
+    switch BypassWalk {
+        Yes => pass;
+        No =>
+            # Look up PDPTE in memory hierarchy
+            do PmhPdpteLookup;
+            incr page_walker_loads;
+    };
+
+    switch PdpteStatus {
+        Leaf =>
+            switch AccessType {
+                Load =>
+                    incr dtlb_load_misses.walk_completed_1g;
+                    incr dtlb_load_misses.walk_completed;
+                Store =>
+                    incr dtlb_store_misses.walk_completed_1g;
+                    incr dtlb_store_misses.walk_completed;
+            };
+            next end_of_op_lifetime;
+        NotLeaf =>
+            pass;
+        Invalid =>
+            next invalid_page_table_entry;
+    };
+
+lookup_pde:
+    # Bypassed walks do not make any visible memory accesses
+    switch BypassWalk {
+        Yes => pass;
+        No =>
+            # Look up PDE in memory hierarchy
+            do PmhPdeLookup;
+            incr page_walker_loads;
+    };
+
+    switch PdeStatus {
+        Leaf =>
+            switch AccessType {
+                Load =>
+                    incr dtlb_load_misses.walk_completed_2m_4m;
+                    incr dtlb_load_misses.walk_completed;
+                Store =>
+                    incr dtlb_store_misses.walk_completed_2m_4m;
+                    incr dtlb_store_misses.walk_completed;
+            };
+            next end_of_op_lifetime;
+        NotLeaf =>
+            pass;
+        Invalid =>
+            next invalid_page_table_entry;
+    };
+
+lookup_pte:
+    # Bypassed walks do not make any visible memory accesses
+    switch BypassWalk {
+        Yes => pass;
+        No =>
+            # Look up PTE in memory hierarchy
+            do PmhPteLookup;
+            incr page_walker_loads;
+    };
+
+    switch PteStatus {
+        Leaf =>
+            switch AccessType {
+                Load =>
+                    incr dtlb_load_misses.walk_completed_4k;
+                    incr dtlb_load_misses.walk_completed;
+                Store =>
+                    incr dtlb_store_misses.walk_completed_4k;
+                    incr dtlb_store_misses.walk_completed;
+            };
+            next end_of_op_lifetime;
+        Invalid =>
+            next invalid_page_table_entry;
+    };
+
+invalid_page_table_entry:
+    # An invalid page table entry (at any level of the page table) is encountered. In this
+    # scenario micro-ops are squashed and never retire. This can be reached by initiated,
+    # merged and bypassed walks.
+    switch AccessType {
+        Load => do OpSquash;
+        Store => do OpSquash;
+    };
+    done;
+
+end_of_op_lifetime:
+    # The micro-op is no longer live; either because it retires or because it is squashed.
+    switch OpRetires {
+        No =>
+            do OpSquash;
+            done;
+        Yes =>
+            do OpRetirement;
+            pass;
+    };
+
+op_retirement:
+    # The micro-op is at the end of the ROB and retires here
+
+    # Increment the STLB miss counters only if the micro-op misses both the DTLB and the
+    # STLB
+    switch DtlbLookupStatus {
+        Hit => pass;
+        Miss =>
+            switch StlbLookupStatus {
+                Hit => pass;
+                Miss =>
+                    switch AccessType {
+                        Load => incr mem_uops_retired.stlb_miss_loads;
+                        Store => incr mem_uops_retired.stlb_miss_stores;
+                    };
+            };
+    };
+
+    # Always increment the retired uop counters
+    switch AccessType {
+        Load => incr mem_uops_retired.all_loads;
+        Store => incr mem_uops_retired.all_stores;
+    };
+
+    done;
+
+}

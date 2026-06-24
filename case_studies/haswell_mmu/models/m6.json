@@ -1,0 +1,9 @@
+{
+    "name": "m6",
+    "features": [
+        "Pml4eCache",
+        "Merging",
+        "WalkBypass",
+        "PfSpecT"
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "name": "m8",
+    "features": [
+        "EarlyPsc",
+        "Merging",
+        "WalkBypass",
+        "PfSpecT"
+    ]
+}

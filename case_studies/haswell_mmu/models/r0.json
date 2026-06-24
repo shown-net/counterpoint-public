@@ -1,0 +1,12 @@
+{
+    "name": "r0",
+    "features": [
+        "Pml4eCache",
+        "PfLoadT",
+        "EarlyPsc",
+        "Merging",
+        "PmhAbort",
+        "WalkReplay",
+        "PfSpecT"
+    ]
+}

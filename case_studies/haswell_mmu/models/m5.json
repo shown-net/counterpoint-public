@@ -1,0 +1,9 @@
+{
+    "name": "m5",
+    "features": [
+        "Pml4eCache",
+        "EarlyPsc",
+        "Merging",
+        "WalkBypass"
+    ]
+}

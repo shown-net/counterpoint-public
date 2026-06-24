@@ -1,0 +1,9 @@
+{
+    "name": "m7",
+    "features": [
+        "Pml4eCache",
+        "EarlyPsc",
+        "WalkBypass",
+        "PfSpecT"
+    ]
+}

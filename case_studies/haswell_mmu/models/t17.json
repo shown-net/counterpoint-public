@@ -1,0 +1,13 @@
+{
+    "name": "t17",
+    "features": [
+        "PfLoadT",
+        "PfStoreT",
+        "PfRetOnlyT",
+        "PfStlbMissT",
+        "EarlyPsc",
+        "Merging",
+        "WalkBypass",
+        "Pml4eCache"
+    ]
+}

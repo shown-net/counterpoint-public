@@ -1,0 +1,50 @@
+{
+  "counter_sets": {
+    "Ret": [
+      "mem_uops_retired.stlb_miss_loads",
+      "mem_uops_retired.all_loads",
+      "mem_uops_retired.stlb_miss_stores",
+      "mem_uops_retired.all_stores"
+    ],
+    "L2TLB": [
+      "dtlb_load_misses.stlb_hit",
+      "dtlb_load_misses.stlb_hit_4k",
+      "dtlb_load_misses.stlb_hit_2m",
+      "dtlb_store_misses.stlb_hit",
+      "dtlb_store_misses.stlb_hit_4k",
+      "dtlb_store_misses.stlb_hit_2m"
+    ],
+    "Walk": [
+      "dtlb_load_misses.miss_causes_a_walk",
+      "dtlb_load_misses.pde_cache_miss",
+      "dtlb_load_misses.walk_completed",
+      "dtlb_load_misses.walk_completed_4k",
+      "dtlb_load_misses.walk_completed_2m_4m",
+      "dtlb_load_misses.walk_completed_1g",
+      "dtlb_store_misses.miss_causes_a_walk",
+      "dtlb_store_misses.pde_cache_miss",
+      "dtlb_store_misses.walk_completed",
+      "dtlb_store_misses.walk_completed_4k",
+      "dtlb_store_misses.walk_completed_2m_4m",
+      "dtlb_store_misses.walk_completed_1g"
+    ],
+    "Refs": [
+      "page_walker_loads"
+    ],
+    "MMU$": [
+      "dtlb_load_misses.pde_cache_lookup",
+      "dtlb_store_misses.pde_cache_lookup",
+      "dtlb_load_misses.pdpte_cache_miss",
+      "dtlb_store_misses.pdpte_cache_miss",
+      "dtlb_load_misses.pdpte_cache_lookup",
+      "dtlb_store_misses.pdpte_cache_lookup"
+    ]
+  },
+  "counter_set_order": [
+    "Ret",
+    "L2TLB",
+    "Walk",
+    "Refs",
+    "MMU$"
+  ]
+}

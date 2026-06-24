@@ -1,0 +1,12 @@
+{
+    "name": "t14",
+    "features": [
+        "PfStoreT",
+        "PfRetOnlyT",
+        "PfStlbMissT",
+        "EarlyPsc",
+        "Merging",
+        "WalkBypass",
+        "Pml4eCache"
+    ]
+}

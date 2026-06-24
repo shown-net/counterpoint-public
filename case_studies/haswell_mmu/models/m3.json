@@ -1,0 +1,9 @@
+{
+    "name": "m3",
+    "features": [
+        "Pml4eCache",
+        "EarlyPsc",
+        "Merging",
+        "PfSpecT"
+    ]
+}

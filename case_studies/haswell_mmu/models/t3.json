@@ -1,0 +1,11 @@
+{
+    "name": "t3",
+    "features": [
+        "PfStoreT",
+        "EarlyPsc",
+        "Merging",
+        "WalkBypass",
+        "PfSpecT",
+        "Pml4eCache"
+    ]
+}

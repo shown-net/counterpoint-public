@@ -1,0 +1,12 @@
+{
+    "name": "a1",
+    "features": [
+        "Pml4eCache",
+        "PfLoadT",
+        "EarlyPsc",
+        "Merging",
+        "PmhAbort",
+        "AbortPmh",
+        "PfSpecT"
+    ]
+}

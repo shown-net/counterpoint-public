@@ -1,0 +1,11 @@
+{
+    "name": "r3",
+    "features": [
+        "PfLoadT",
+        "EarlyPsc",
+        "Merging",
+        "PmhAbort",
+        "WalkReplay",
+        "PfSpecT"
+    ]
+}

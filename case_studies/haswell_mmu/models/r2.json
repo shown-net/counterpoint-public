@@ -1,0 +1,10 @@
+{
+    "name": "r2",
+    "features": [
+        "Pml4eCache",
+        "EarlyPsc",
+        "Merging",
+        "PmhAbort",
+        "WalkReplay"
+    ]
+}
