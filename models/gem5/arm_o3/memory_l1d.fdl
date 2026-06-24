@@ -1,0 +1,17 @@
+# Source population: one L1D cache access counted by gem5 classic cache stats.
+# Counted events: total accesses, read accesses, and ReadReq MSHR misses.
+# Not modeled: latency, prefetch/writeback subtypes, miss service source, PMU groups, and canonical metrics.
+
+FLOW {
+    incr l1d_overall_accesses;
+    switch request_class {
+        read_hit_or_mshr_hit =>
+            incr l1d_read_accesses;
+        read_mshr_miss =>
+            incr l1d_read_accesses;
+            incr l1d_read_mshr_misses;
+        other =>
+            pass;
+    };
+    done;
+}

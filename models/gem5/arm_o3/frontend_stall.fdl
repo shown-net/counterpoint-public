@@ -1,0 +1,14 @@
+# Source population: one O3 CPU cycle classified by frontend fetch wait state.
+# Counted events: core cycles and frontend ICache stall cycles.
+# Not modeled: non-ICache frontend stalls, backend stalls, overlap attribution, PMU groups, and canonical metrics.
+
+FLOW {
+    switch cycle_class {
+        frontend_icache_stall =>
+            incr core_cycles;
+            incr frontend_icache_stall_cycles;
+        other =>
+            incr core_cycles;
+    };
+    done;
+}

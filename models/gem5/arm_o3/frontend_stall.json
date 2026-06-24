@@ -1,0 +1,68 @@
+{
+  "model_id": "gem5_arm_o3_frontend_stall_v1",
+  "module_id": "frontend_stall",
+  "fdl_path": "frontend_stall.fdl",
+  "gem5_revision": "f5fd9cb4fbbaebdb6b4f707d8e57f9b52a793d7f",
+  "source_refs": {
+    "base_cpu_cycle_declaration": {
+      "path": "src/cpu/base.cc",
+      "symbol": "BaseCPU::\nBaseCPUStats::BaseCPUStats",
+      "snippets": [
+        "ADD_STAT(numCycles, statistics::units::Cycle::get(),\n               \"Number of cpu cycles simulated\")"
+      ]
+    },
+    "fetch_icache_stall_declaration": {
+      "path": "src/cpu/base.cc",
+      "symbol": "BaseCPU::\nFetchCPUStats::FetchCPUStats",
+      "snippets": [
+        "ADD_STAT(icacheStallCycles, statistics::units::Cycle::get(),\n             \"ICache total stall cycles\")"
+      ]
+    },
+    "o3_cpu_tick_cycle_increment": {
+      "path": "src/cpu/o3/cpu.cc",
+      "symbol": "CPU::tick()",
+      "snippets": [
+        "++baseStats.numCycles;"
+      ]
+    },
+    "o3_cpu_idle_cycle_increment": {
+      "path": "src/cpu/o3/cpu.cc",
+      "symbol": "CPU::wakeCPU",
+      "snippets": [
+        "baseStats.numCycles += cycles;"
+      ]
+    },
+    "fetch_cache_line_icache_stall_increment": {
+      "path": "src/cpu/o3/fetch.cc",
+      "symbol": "Fetch::fetch(bool &status_change)",
+      "snippets": [
+        "if (fetchStatus[tid] == IcacheWaitResponse) {\n                cpu->fetchStats[tid]->icacheStallCycles++;\n                fetchStats.status[IcacheWaitResponse]++;"
+      ]
+    },
+    "fetch_wait_response_icache_stall_increment": {
+      "path": "src/cpu/o3/fetch.cc",
+      "symbol": "Fetch::profileStall",
+      "snippets": [
+        "} else if (fetchStatus[tid] == IcacheWaitResponse) {\n        cpu->fetchStats[tid]->icacheStallCycles++;\n        fetchStats.status[IcacheWaitResponse]++;"
+      ]
+    }
+  },
+  "counter_bindings": {
+    "core_cycles": {
+      "stat_selector": "system.cpu.numCycles",
+      "declaration_ref": "base_cpu_cycle_declaration",
+      "increment_refs": [
+        "o3_cpu_tick_cycle_increment",
+        "o3_cpu_idle_cycle_increment"
+      ]
+    },
+    "frontend_icache_stall_cycles": {
+      "stat_selector": "system.cpu.fetchStats0.icacheStallCycles",
+      "declaration_ref": "fetch_icache_stall_declaration",
+      "increment_refs": [
+        "fetch_cache_line_icache_stall_increment",
+        "fetch_wait_response_icache_stall_increment"
+      ]
+    }
+  }
+}

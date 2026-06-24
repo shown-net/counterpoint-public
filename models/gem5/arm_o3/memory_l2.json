@@ -1,0 +1,61 @@
+{
+  "model_id": "gem5_arm_o3_memory_l2_v1",
+  "module_id": "memory_l2",
+  "fdl_path": "memory_l2.fdl",
+  "gem5_revision": "f5fd9cb4fbbaebdb6b4f707d8e57f9b52a793d7f",
+  "source_refs": {
+    "cache_stats_declaration": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::CacheStats",
+      "snippets": [
+        "ADD_STAT(demandMisses, statistics::units::Count::get(),\n             \"number of demand (read+write) misses\")",
+        "ADD_STAT(demandAccesses, statistics::units::Count::get(),\n             \"number of demand (read+write) accesses\")",
+        "ADD_STAT(overallAccesses, statistics::units::Count::get(),\n             \"number of overall (read+write) accesses\")"
+      ]
+    },
+    "cache_demand_miss_formula": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::regStats",
+      "snippets": [
+        "demandMisses = SUM_DEMAND(misses);"
+      ]
+    },
+    "cache_demand_access_formula": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::regStats",
+      "snippets": [
+        "demandAccesses = demandHits + demandMisses;"
+      ]
+    },
+    "cache_overall_access_formula": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::regStats",
+      "snippets": [
+        "overallAccesses = overallHits + overallMisses;"
+      ]
+    }
+  },
+  "counter_bindings": {
+    "l2_overall_accesses": {
+      "stat_selector": "system.l2.overallAccesses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_overall_access_formula"
+      ]
+    },
+    "l2_demand_accesses": {
+      "stat_selector": "system.l2.demandAccesses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_demand_access_formula"
+      ]
+    },
+    "l2_demand_misses": {
+      "stat_selector": "system.l2.demandMisses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_demand_miss_formula"
+      ]
+    }
+  }
+}

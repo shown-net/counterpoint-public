@@ -205,3 +205,17 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# Haswell MMU case study: ignore heavyweight artifact outputs, keep source models and
+# minimal case-study metadata in-tree.
+case_studies/haswell_mmu/data/
+case_studies/haswell_mmu/generated_figures/
+case_studies/haswell_mmu/analysis/
+case_studies/haswell_mmu/scaling/
+case_studies/haswell_mmu/notebooks/
+case_studies/haswell_mmu/*.bib
+case_studies/haswell_mmu/LICENSE-*.txt
+case_studies/haswell_mmu/misc/*
+!case_studies/haswell_mmu/misc/counter_groups.json
+case_studies/haswell_mmu/models/*/

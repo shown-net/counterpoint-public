@@ -1,0 +1,52 @@
+{
+  "model_id": "gem5_arm_o3_branch_frontend_v1",
+  "module_id": "branch_frontend",
+  "fdl_path": "branch_frontend.fdl",
+  "gem5_revision": "f5fd9cb4fbbaebdb6b4f707d8e57f9b52a793d7f",
+  "source_refs": {
+    "commit_control_declaration": {
+      "path": "src/cpu/base.cc",
+      "symbol": "BaseCPU::CommitCPUStats::CommitCPUStats",
+      "snippets": [
+        "ADD_STAT(committedControl, statistics::units::Count::get(),\n               \"Class of control type instructions committed\")"
+      ]
+    },
+    "commit_control_increment": {
+      "path": "src/cpu/base.cc",
+      "symbol": "CommitCPUStats::updateComCtrlStats",
+      "snippets": [
+        "committedControl[gem5::StaticInstFlags::Flags::IsControl]++;"
+      ]
+    },
+    "branch_predictor_mispredict_declaration": {
+      "path": "src/cpu/pred/bpred_unit.cc",
+      "symbol": "BPredUnit::BPredUnitStats::BPredUnitStats",
+      "snippets": [
+        "ADD_STAT(mispredicted, statistics::units::Count::get(),\n              \"Number of committed branches that were mispredicted.\")"
+      ]
+    },
+    "branch_predictor_mispredict_increment": {
+      "path": "src/cpu/pred/bpred_unit.cc",
+      "symbol": "BPredUnit::commitBranch",
+      "snippets": [
+        "stats.mispredicted[tid][hist->type]++;"
+      ]
+    }
+  },
+  "counter_bindings": {
+    "committed_branches": {
+      "stat_selector": "system.cpu.commitStats0.committedControl::IsControl",
+      "declaration_ref": "commit_control_declaration",
+      "increment_refs": [
+        "commit_control_increment"
+      ]
+    },
+    "branch_mispredicts": {
+      "stat_selector": "system.cpu.branchPred.mispredicted_0::total",
+      "declaration_ref": "branch_predictor_mispredict_declaration",
+      "increment_refs": [
+        "branch_predictor_mispredict_increment"
+      ]
+    }
+  }
+}

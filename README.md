@@ -27,9 +27,13 @@ We would appreciate if you could cite our paper if you use it for your work:
 
 We have used CounterPoint to explore the memory management unit (MMU) implementation on
 an Intel Haswell Server microprocessor. The results are presented in the above paper. You
-can find the dataset, models and analysis scripts as a Zenodo artifact:
+can find the full public dataset and analysis outputs as a Zenodo artifact:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18017051.svg)](https://doi.org/10.5281/zenodo.18017051)
+
+This repository also vendors a lightweight, mainline-adapted version of that case study
+under `case_studies/haswell_mmu/`, keeping the model source, scaling script, and minimal
+metadata in-tree while leaving heavyweight artifact outputs external/ignored.
 
 ### Contributing
 

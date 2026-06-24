@@ -1,0 +1,8 @@
+# Source population: one O3 CPU cycle accounted by gem5 BaseCPU stats.
+# Counted events: core cycles.
+# Not modeled: pipeline stage timing, idle cause split, resource contention, PMU groups, and canonical metrics.
+
+FLOW {
+    incr core_cycles;
+    done;
+}

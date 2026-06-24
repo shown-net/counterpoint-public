@@ -1,0 +1,32 @@
+# Source population: one committed dynamic uop.
+# Counted events: committed uops, instruction boundaries, control uops, and memory op classes.
+# Not modeled: timing, squashes, frontend fetch, backend issue, cache behavior, and PMU groups.
+
+FLOW {
+    incr committed_uops;
+    switch op_class {
+        mem_read =>
+            incr committed_mem_read;
+        mem_write =>
+            incr committed_mem_write;
+        float_mem_read =>
+            incr committed_float_mem_read;
+        float_mem_write =>
+            incr committed_float_mem_write;
+        other =>
+            pass;
+    };
+    switch control {
+        yes =>
+            incr committed_control;
+        no =>
+            pass;
+    };
+    switch instruction_boundary {
+        yes =>
+            incr committed_instructions;
+        no =>
+            pass;
+    };
+    done;
+}

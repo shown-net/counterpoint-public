@@ -1,0 +1,61 @@
+{
+  "model_id": "gem5_arm_o3_icache_frontend_v1",
+  "module_id": "icache_frontend",
+  "fdl_path": "icache_frontend.fdl",
+  "gem5_revision": "f5fd9cb4fbbaebdb6b4f707d8e57f9b52a793d7f",
+  "source_refs": {
+    "cache_stats_declaration": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::CacheStats",
+      "snippets": [
+        "ADD_STAT(demandMisses, statistics::units::Count::get(),\n             \"number of demand (read+write) misses\")",
+        "ADD_STAT(demandAccesses, statistics::units::Count::get(),\n             \"number of demand (read+write) accesses\")",
+        "ADD_STAT(overallAccesses, statistics::units::Count::get(),\n             \"number of overall (read+write) accesses\")"
+      ]
+    },
+    "cache_demand_miss_formula": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::regStats",
+      "snippets": [
+        "demandMisses = SUM_DEMAND(misses);"
+      ]
+    },
+    "cache_demand_access_formula": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::regStats",
+      "snippets": [
+        "demandAccesses = demandHits + demandMisses;"
+      ]
+    },
+    "cache_overall_access_formula": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::regStats",
+      "snippets": [
+        "overallAccesses = overallHits + overallMisses;"
+      ]
+    }
+  },
+  "counter_bindings": {
+    "icache_overall_accesses": {
+      "stat_selector": "system.cpu.icache.overallAccesses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_overall_access_formula"
+      ]
+    },
+    "icache_demand_accesses": {
+      "stat_selector": "system.cpu.icache.demandAccesses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_demand_access_formula"
+      ]
+    },
+    "icache_demand_misses": {
+      "stat_selector": "system.cpu.icache.demandMisses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_demand_miss_formula"
+      ]
+    }
+  }
+}

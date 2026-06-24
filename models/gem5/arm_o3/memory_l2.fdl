@@ -1,0 +1,17 @@
+# Source population: one L2 cache access counted by gem5 classic cache stats.
+# Counted events: overall accesses, demand accesses, and demand misses.
+# Not modeled: latency, command subtype split, prefetch/writeback subtypes, PMU groups, and canonical metrics.
+
+FLOW {
+    incr l2_overall_accesses;
+    switch request_class {
+        demand_hit =>
+            incr l2_demand_accesses;
+        demand_miss =>
+            incr l2_demand_accesses;
+            incr l2_demand_misses;
+        other =>
+            pass;
+    };
+    done;
+}

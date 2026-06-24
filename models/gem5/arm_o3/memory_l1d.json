@@ -1,0 +1,67 @@
+{
+  "model_id": "gem5_arm_o3_memory_l1d_v1",
+  "module_id": "memory_l1d",
+  "fdl_path": "memory_l1d.fdl",
+  "gem5_revision": "f5fd9cb4fbbaebdb6b4f707d8e57f9b52a793d7f",
+  "source_refs": {
+    "cache_cmd_stats_declaration": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheCmdStats::CacheCmdStats",
+      "snippets": [
+        "ADD_STAT(accesses, statistics::units::Count::get(),\n               (\"number of \" + name + \" accesses(hits+misses)\").c_str())",
+        "ADD_STAT(mshrMisses, statistics::units::Count::get(),\n               (\"number of \" + name + \" MSHR misses\").c_str())"
+      ]
+    },
+    "cache_cmd_access_formula": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheCmdStats::regStatsFromParent",
+      "snippets": [
+        "accesses = hits + misses;"
+      ]
+    },
+    "cache_overall_stats_declaration": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::CacheStats",
+      "snippets": [
+        "ADD_STAT(overallAccesses, statistics::units::Count::get(),\n             \"number of overall (read+write) accesses\")"
+      ]
+    },
+    "cache_overall_access_formula": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::CacheStats::regStats",
+      "snippets": [
+        "overallAccesses = overallHits + overallMisses;"
+      ]
+    },
+    "cache_mshr_miss_increment": {
+      "path": "src/mem/cache/base.cc",
+      "symbol": "BaseCache::handleTimingReqMiss",
+      "snippets": [
+        "} else {\n        // no MSHR\n        assert(pkt->req->requestorId() < system->maxRequestors());\n        stats.cmdStats(pkt).mshrMisses[pkt->req->requestorId()]++;"
+      ]
+    }
+  },
+  "counter_bindings": {
+    "l1d_overall_accesses": {
+      "stat_selector": "system.cpu.dcache.overallAccesses::total",
+      "declaration_ref": "cache_overall_stats_declaration",
+      "increment_refs": [
+        "cache_overall_access_formula"
+      ]
+    },
+    "l1d_read_accesses": {
+      "stat_selector": "system.cpu.dcache.ReadReq.accesses::total",
+      "declaration_ref": "cache_cmd_stats_declaration",
+      "increment_refs": [
+        "cache_cmd_access_formula"
+      ]
+    },
+    "l1d_read_mshr_misses": {
+      "stat_selector": "system.cpu.dcache.ReadReq.mshrMisses::total",
+      "declaration_ref": "cache_cmd_stats_declaration",
+      "increment_refs": [
+        "cache_mshr_miss_increment"
+      ]
+    }
+  }
+}

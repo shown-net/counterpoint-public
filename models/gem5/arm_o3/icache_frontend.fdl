@@ -1,0 +1,17 @@
+# Source population: one ICache access counted by gem5 classic cache stats.
+# Counted events: overall accesses, demand accesses, and demand misses.
+# Not modeled: latency, MSHR behavior, prefetch subtypes, PMU groups, and canonical metrics.
+
+FLOW {
+    incr icache_overall_accesses;
+    switch request_class {
+        demand_hit =>
+            incr icache_demand_accesses;
+        demand_miss =>
+            incr icache_demand_accesses;
+            incr icache_demand_misses;
+        other =>
+            pass;
+    };
+    done;
+}

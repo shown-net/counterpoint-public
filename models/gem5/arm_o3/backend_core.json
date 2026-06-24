@@ -1,0 +1,39 @@
+{
+  "model_id": "gem5_arm_o3_backend_core_v1",
+  "module_id": "backend_core",
+  "fdl_path": "backend_core.fdl",
+  "gem5_revision": "f5fd9cb4fbbaebdb6b4f707d8e57f9b52a793d7f",
+  "source_refs": {
+    "base_cpu_cycle_declaration": {
+      "path": "src/cpu/base.cc",
+      "symbol": "BaseCPU::\nBaseCPUStats::BaseCPUStats",
+      "snippets": [
+        "ADD_STAT(numCycles, statistics::units::Cycle::get(),\n               \"Number of cpu cycles simulated\")"
+      ]
+    },
+    "o3_cpu_tick_cycle_increment": {
+      "path": "src/cpu/o3/cpu.cc",
+      "symbol": "CPU::tick()",
+      "snippets": [
+        "++baseStats.numCycles;"
+      ]
+    },
+    "o3_cpu_idle_cycle_increment": {
+      "path": "src/cpu/o3/cpu.cc",
+      "symbol": "CPU::wakeCPU",
+      "snippets": [
+        "baseStats.numCycles += cycles;"
+      ]
+    }
+  },
+  "counter_bindings": {
+    "core_cycles": {
+      "stat_selector": "system.cpu.numCycles",
+      "declaration_ref": "base_cpu_cycle_declaration",
+      "increment_refs": [
+        "o3_cpu_tick_cycle_increment",
+        "o3_cpu_idle_cycle_increment"
+      ]
+    }
+  }
+}

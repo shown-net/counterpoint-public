@@ -1,6 +1,6 @@
 [submodule "external/Pexpr"]
 	path = external/Pexpr
-	url = git@github.com:NicholasLindsay/pexpr-public.git
+	url = https://github.com/NicholasLindsay/pexpr-public.git
 [submodule "external/upath"]
 	path = external/upath
-	url = git@github.com:NicholasLindsay/upath-public.git
+	url = https://github.com/NicholasLindsay/upath-public.git

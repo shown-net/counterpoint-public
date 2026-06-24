@@ -1,0 +1,14 @@
+# Source population: one committed control instruction.
+# Counted events: committed control instructions and branch-predictor committed mispredicts.
+# Not modeled: predictor internals, target class, frontend timing, PMU groups, and canonical metrics.
+
+FLOW {
+    incr committed_branches;
+    switch prediction {
+        correct =>
+            pass;
+        mispredicted =>
+            incr branch_mispredicts;
+    };
+    done;
+}

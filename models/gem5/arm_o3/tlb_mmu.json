@@ -1,0 +1,103 @@
+{
+  "model_id": "gem5_arm_o3_tlb_mmu_v1",
+  "module_id": "tlb_mmu",
+  "fdl_path": "tlb_mmu.fdl",
+  "gem5_revision": "f5fd9cb4fbbaebdb6b4f707d8e57f9b52a793d7f",
+  "source_refs": {
+    "tlb_stats_declaration": {
+      "path": "src/arch/arm/tlb.cc",
+      "symbol": "TLB::TlbStats::TlbStats",
+      "snippets": [
+        "ADD_STAT(instMisses, statistics::units::Count::get(), \"Inst misses\")",
+        "ADD_STAT(readMisses, statistics::units::Count::get(),  \"Read misses\")",
+        "ADD_STAT(writeMisses, statistics::units::Count::get(), \"Write misses\")",
+        "ADD_STAT(readAccesses, statistics::units::Count::get(), \"Read accesses\",\n             readHits + readMisses)",
+        "ADD_STAT(writeAccesses, statistics::units::Count::get(), \"Write accesses\",\n             writeHits + writeMisses)",
+        "ADD_STAT(instAccesses, statistics::units::Count::get(), \"Inst accesses\",\n             instHits + instMisses)",
+        "ADD_STAT(misses, statistics::units::Count::get(),\n             \"Total TLB (inst and data) misses\",\n             readMisses + writeMisses + instMisses)",
+        "ADD_STAT(accesses, statistics::units::Count::get(),\n             \"Total TLB (inst and data) accesses\",\n             readAccesses + writeAccesses + instAccesses)"
+      ]
+    },
+    "tlb_miss_increment": {
+      "path": "src/arch/arm/tlb.cc",
+      "symbol": "TLB::lookup",
+      "snippets": [
+        "if (!retval) {\n            if (mode == BaseMMU::Execute) {\n                stats.instMisses++;\n            } else if (mode == BaseMMU::Write) {\n                stats.writeMisses++;\n            } else {\n                stats.readMisses++;\n            }\n        }"
+      ]
+    }
+  },
+  "counter_bindings": {
+    "dtlb_accesses": {
+      "stat_selector": "system.cpu.mmu.dtb.accesses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
+      ]
+    },
+    "dtlb_misses": {
+      "stat_selector": "system.cpu.mmu.dtb.misses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration",
+        "tlb_miss_increment"
+      ]
+    },
+    "dtlb_read_accesses": {
+      "stat_selector": "system.cpu.mmu.dtb.readAccesses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
+      ]
+    },
+    "dtlb_read_misses": {
+      "stat_selector": "system.cpu.mmu.dtb.readMisses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_miss_increment"
+      ]
+    },
+    "dtlb_write_accesses": {
+      "stat_selector": "system.cpu.mmu.dtb.writeAccesses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
+      ]
+    },
+    "dtlb_write_misses": {
+      "stat_selector": "system.cpu.mmu.dtb.writeMisses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_miss_increment"
+      ]
+    },
+    "itlb_accesses": {
+      "stat_selector": "system.cpu.mmu.itb.accesses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
+      ]
+    },
+    "itlb_misses": {
+      "stat_selector": "system.cpu.mmu.itb.misses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration",
+        "tlb_miss_increment"
+      ]
+    },
+    "itlb_inst_accesses": {
+      "stat_selector": "system.cpu.mmu.itb.instAccesses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
+      ]
+    },
+    "itlb_inst_misses": {
+      "stat_selector": "system.cpu.mmu.itb.instMisses",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_miss_increment"
+      ]
+    }
+  }
+}
