@@ -24,15 +24,59 @@
       "snippets": [
         "baseStats.numCycles += cycles;"
       ]
+    },
+    "o3_pipeline_status_declaration": {
+      "path": "src/cpu/o3/cpu.cc",
+      "symbol": "O3CPU pipeline stage status stats",
+      "snippets": [
+        "ADD_STAT(status, statistics::units::Cycle::get(), \"Number of cycles commit is running\")",
+        "ADD_STAT(status, statistics::units::Cycle::get(), \"Number of cycles decode is running\")",
+        "ADD_STAT(status, statistics::units::Cycle::get(), \"Number of cycles fetch has run and was not squashing or blocked\")"
+      ]
     }
   },
   "counter_bindings": {
     "core_cycles": {
-      "stat_selector": "system.cpu.numCycles",
+      "gem5_stat": "system.cpu.numCycles",
       "declaration_ref": "base_cpu_cycle_declaration",
       "increment_refs": [
         "o3_cpu_tick_cycle_increment",
         "o3_cpu_idle_cycle_increment"
+      ]
+    },
+    "commit_running_cycles": {
+      "gem5_stat": "system.cpu.commit.status::running",
+      "declaration_ref": "o3_pipeline_status_declaration",
+      "increment_refs": [
+        "o3_pipeline_status_declaration"
+      ]
+    },
+    "decode_running_cycles": {
+      "gem5_stat": "system.cpu.decode.status::Running",
+      "declaration_ref": "o3_pipeline_status_declaration",
+      "increment_refs": [
+        "o3_pipeline_status_declaration"
+      ]
+    },
+    "decode_blocked_cycles": {
+      "gem5_stat": "system.cpu.decode.status::Blocked",
+      "declaration_ref": "o3_pipeline_status_declaration",
+      "increment_refs": [
+        "o3_pipeline_status_declaration"
+      ]
+    },
+    "fetch_running_cycles": {
+      "gem5_stat": "system.cpu.fetch.status::running",
+      "declaration_ref": "o3_pipeline_status_declaration",
+      "increment_refs": [
+        "o3_pipeline_status_declaration"
+      ]
+    },
+    "fetch_icache_wait_cycles": {
+      "gem5_stat": "system.cpu.fetch.status::icacheWaitResponse",
+      "declaration_ref": "o3_pipeline_status_declaration",
+      "increment_refs": [
+        "o3_pipeline_status_declaration"
       ]
     }
   }

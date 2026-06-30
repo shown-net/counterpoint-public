@@ -7,9 +7,16 @@ FLOW {
     switch request_class {
         demand_hit =>
             incr l2_demand_accesses;
+            incr l2_demand_hits;
+            incr l2_overall_hits;
         demand_miss =>
             incr l2_demand_accesses;
             incr l2_demand_misses;
+            incr l2_overall_misses;
+        blocked_no_mshrs =>
+            incr l2_blocked_no_mshrs;
+        replacement =>
+            incr l2_replacements;
         other =>
             pass;
     };

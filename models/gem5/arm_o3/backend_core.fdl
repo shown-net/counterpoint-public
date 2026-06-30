@@ -4,5 +4,27 @@
 
 FLOW {
     incr core_cycles;
+    switch commit_status {
+        running =>
+            incr commit_running_cycles;
+        other =>
+            pass;
+    };
+    switch decode_status {
+        running =>
+            incr decode_running_cycles;
+        blocked =>
+            incr decode_blocked_cycles;
+        other =>
+            pass;
+    };
+    switch fetch_status {
+        running =>
+            incr fetch_running_cycles;
+        icache_wait_response =>
+            incr fetch_icache_wait_cycles;
+        other =>
+            pass;
+    };
     done;
 }

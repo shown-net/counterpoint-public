@@ -3,12 +3,24 @@
 # Not modeled: non-ICache frontend stalls, backend stalls, overlap attribution, PMU groups, and canonical metrics.
 
 FLOW {
+    incr core_cycles;
     switch cycle_class {
         frontend_icache_stall =>
-            incr core_cycles;
             incr frontend_icache_stall_cycles;
         other =>
-            incr core_cycles;
+            pass;
+    };
+    switch fetch_status {
+        running =>
+            incr fetch_running_cycles;
+        squashing =>
+            incr fetch_squashing_cycles;
+        icache_wait_response =>
+            incr fetch_icache_wait_response_cycles;
+        icache_wait_retry =>
+            incr fetch_icache_wait_retry_cycles;
+        other =>
+            pass;
     };
     done;
 }

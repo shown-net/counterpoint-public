@@ -1,4 +1,4 @@
-"""Thin gem5 sidecar binding FDL counters to source-backed raw stats."""
+"""Thin gem5 sidecar binding FDL counters to source-backed gem5 stats."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ _BANNED_KEYS = {
     "population_unit",
 }
 _SOURCE_REF_KEYS = {"path", "symbol", "snippets"}
-_COUNTER_BINDING_KEYS = {"stat_selector", "declaration_ref", "increment_refs"}
+_COUNTER_BINDING_KEYS = {"gem5_stat", "declaration_ref", "increment_refs"}
 
 
 def _exact_keys(node: Mapping[str, Any], expected: set[str], context: str) -> None:
@@ -69,9 +69,9 @@ class SourceReference:
 
 @dataclass(frozen=True)
 class CounterBinding:
-    """Logical counter to raw gem5 stat selector binding."""
+    """FDL counter to gem5 stat binding."""
 
-    stat_selector: str
+    gem5_stat: str
     declaration_ref: str
     increment_refs: tuple[str, ...]
 
@@ -143,9 +143,9 @@ def _parse_counter_bindings(
                 f"counter_bindings.{counter} has unknown source refs: {unknown_refs}"
             )
         parsed[str(counter)] = CounterBinding(
-            stat_selector=_nonempty_string(
-                node["stat_selector"],
-                f"counter_bindings.{counter}.stat_selector",
+            gem5_stat=_nonempty_string(
+                node["gem5_stat"],
+                f"counter_bindings.{counter}.gem5_stat",
             ),
             declaration_ref=declaration_ref,
             increment_refs=tuple(increment_refs),

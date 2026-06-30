@@ -7,9 +7,15 @@ FLOW {
     switch request_class {
         demand_hit =>
             incr icache_demand_accesses;
+            incr icache_demand_hits;
+            incr icache_overall_hits;
+            incr icache_read_accesses;
         demand_miss =>
             incr icache_demand_accesses;
             incr icache_demand_misses;
+            incr icache_overall_misses;
+            incr icache_read_accesses;
+            incr icache_read_misses;
         other =>
             pass;
     };

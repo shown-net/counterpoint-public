@@ -5,11 +5,25 @@
 FLOW {
     incr l1d_overall_accesses;
     switch request_class {
-        read_hit_or_mshr_hit =>
+        read_hit =>
             incr l1d_read_accesses;
+            incr l1d_read_hits;
+        read_miss =>
+            incr l1d_read_accesses;
+            incr l1d_read_misses;
         read_mshr_miss =>
             incr l1d_read_accesses;
+            incr l1d_read_misses;
             incr l1d_read_mshr_misses;
+        write_hit =>
+            incr l1d_write_accesses;
+        write_miss =>
+            incr l1d_write_accesses;
+            incr l1d_write_misses;
+        write_mshr_miss =>
+            incr l1d_write_accesses;
+            incr l1d_write_misses;
+            incr l1d_write_mshr_misses;
         other =>
             pass;
     };

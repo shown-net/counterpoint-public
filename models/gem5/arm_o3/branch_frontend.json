@@ -31,21 +31,67 @@
       "snippets": [
         "stats.mispredicted[tid][hist->type]++;"
       ]
+    },
+    "branch_predictor_route_declaration": {
+      "path": "src/cpu/pred/bpred_unit.cc",
+      "symbol": "BPredUnit::BPredUnitStats::BPredUnitStats",
+      "snippets": [
+        "ADD_STAT(condPredicted, statistics::units::Count::get(), \"Number of conditional branches predicted\")",
+        "ADD_STAT(condIncorrect, statistics::units::Count::get(), \"Number of conditional branches incorrect\")",
+        "ADD_STAT(BTBLookups, statistics::units::Count::get(), \"Number of BTB lookups\")",
+        "ADD_STAT(BTBHits, statistics::units::Count::get(), \"Number of BTB hits\")",
+        "ADD_STAT(BTBMispredicted, statistics::units::Count::get(), \"Number BTB mispredictions. No target found or target wrong\")"
+      ]
     }
   },
   "counter_bindings": {
     "committed_branches": {
-      "stat_selector": "system.cpu.commitStats0.committedControl::IsControl",
+      "gem5_stat": "system.cpu.commitStats0.committedControl::IsControl",
       "declaration_ref": "commit_control_declaration",
       "increment_refs": [
         "commit_control_increment"
       ]
     },
     "branch_mispredicts": {
-      "stat_selector": "system.cpu.branchPred.mispredicted_0::total",
+      "gem5_stat": "system.cpu.branchPred.mispredicted_0::total",
       "declaration_ref": "branch_predictor_mispredict_declaration",
       "increment_refs": [
         "branch_predictor_mispredict_increment"
+      ]
+    },
+    "cond_predicted": {
+      "gem5_stat": "system.cpu.branchPred.condPredicted",
+      "declaration_ref": "branch_predictor_route_declaration",
+      "increment_refs": [
+        "branch_predictor_route_declaration"
+      ]
+    },
+    "cond_incorrect": {
+      "gem5_stat": "system.cpu.branchPred.condIncorrect",
+      "declaration_ref": "branch_predictor_route_declaration",
+      "increment_refs": [
+        "branch_predictor_route_declaration"
+      ]
+    },
+    "btb_lookups": {
+      "gem5_stat": "system.cpu.branchPred.BTBLookups",
+      "declaration_ref": "branch_predictor_route_declaration",
+      "increment_refs": [
+        "branch_predictor_route_declaration"
+      ]
+    },
+    "btb_hits": {
+      "gem5_stat": "system.cpu.branchPred.BTBHits",
+      "declaration_ref": "branch_predictor_route_declaration",
+      "increment_refs": [
+        "branch_predictor_route_declaration"
+      ]
+    },
+    "btb_mispredicted": {
+      "gem5_stat": "system.cpu.branchPred.BTBMispredicted",
+      "declaration_ref": "branch_predictor_route_declaration",
+      "increment_refs": [
+        "branch_predictor_route_declaration"
       ]
     }
   }

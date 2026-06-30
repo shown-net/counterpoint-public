@@ -45,49 +45,84 @@
   },
   "counter_bindings": {
     "committed_uops": {
-      "stat_selector": "system.cpu.thread_0.numOps",
+      "gem5_stat": "system.cpu.thread_0.numOps",
       "declaration_ref": "commit_stats_declaration",
       "increment_refs": [
         "commit_uop_increment"
       ]
     },
     "committed_instructions": {
-      "stat_selector": "system.cpu.thread_0.numInsts",
+      "gem5_stat": "system.cpu.thread_0.numInsts",
       "declaration_ref": "commit_stats_declaration",
       "increment_refs": [
         "commit_instruction_increment"
       ]
     },
     "committed_mem_read": {
-      "stat_selector": "system.cpu.commitStats0.committedInstType::MemRead",
+      "gem5_stat": "system.cpu.commitStats0.committedInstType::MemRead",
+      "declaration_ref": "commit_stats_declaration",
+      "increment_refs": [
+        "commit_op_class_increment"
+      ]
+    },
+    "committed_int_alu": {
+      "gem5_stat": "system.cpu.commitStats0.committedInstType::IntAlu",
+      "declaration_ref": "commit_stats_declaration",
+      "increment_refs": [
+        "commit_op_class_increment"
+      ]
+    },
+    "committed_int_mult": {
+      "gem5_stat": "system.cpu.commitStats0.committedInstType::IntMult",
+      "declaration_ref": "commit_stats_declaration",
+      "increment_refs": [
+        "commit_op_class_increment"
+      ]
+    },
+    "committed_int_div": {
+      "gem5_stat": "system.cpu.commitStats0.committedInstType::IntDiv",
+      "declaration_ref": "commit_stats_declaration",
+      "increment_refs": [
+        "commit_op_class_increment"
+      ]
+    },
+    "committed_float_add": {
+      "gem5_stat": "system.cpu.commitStats0.committedInstType::FloatAdd",
       "declaration_ref": "commit_stats_declaration",
       "increment_refs": [
         "commit_op_class_increment"
       ]
     },
     "committed_mem_write": {
-      "stat_selector": "system.cpu.commitStats0.committedInstType::MemWrite",
+      "gem5_stat": "system.cpu.commitStats0.committedInstType::MemWrite",
       "declaration_ref": "commit_stats_declaration",
       "increment_refs": [
         "commit_op_class_increment"
       ]
     },
     "committed_float_mem_read": {
-      "stat_selector": "system.cpu.commitStats0.committedInstType::FloatMemRead",
+      "gem5_stat": "system.cpu.commitStats0.committedInstType::FloatMemRead",
       "declaration_ref": "commit_stats_declaration",
       "increment_refs": [
         "commit_op_class_increment"
       ]
     },
     "committed_float_mem_write": {
-      "stat_selector": "system.cpu.commitStats0.committedInstType::FloatMemWrite",
+      "gem5_stat": "system.cpu.commitStats0.committedInstType::FloatMemWrite",
+      "declaration_ref": "commit_stats_declaration",
+      "increment_refs": [
+        "commit_op_class_increment"
+      ]
+    },
+    "committed_simd_alu": {
+      "gem5_stat": "system.cpu.commitStats0.committedInstType::SimdAlu",
       "declaration_ref": "commit_stats_declaration",
       "increment_refs": [
         "commit_op_class_increment"
       ]
     },
     "committed_control": {
-      "stat_selector": "system.cpu.commitStats0.committedControl::IsControl",
+      "gem5_stat": "system.cpu.commitStats0.committedControl::IsControl",
       "declaration_ref": "commit_stats_declaration",
       "increment_refs": [
         "commit_control_increment"

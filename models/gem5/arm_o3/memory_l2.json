@@ -10,7 +10,12 @@
       "snippets": [
         "ADD_STAT(demandMisses, statistics::units::Count::get(),\n             \"number of demand (read+write) misses\")",
         "ADD_STAT(demandAccesses, statistics::units::Count::get(),\n             \"number of demand (read+write) accesses\")",
-        "ADD_STAT(overallAccesses, statistics::units::Count::get(),\n             \"number of overall (read+write) accesses\")"
+        "ADD_STAT(overallAccesses, statistics::units::Count::get(),\n             \"number of overall (read+write) accesses\")",
+        "ADD_STAT(demandHits, statistics::units::Count::get(),\n             \"number of demand (read+write) hits\")",
+        "ADD_STAT(overallHits, statistics::units::Count::get(),\n             \"number of overall hits\")",
+        "ADD_STAT(overallMisses, statistics::units::Count::get(),\n             \"number of overall misses\")",
+        "ADD_STAT(blockedCauses, statistics::units::Count::get(),\n             \"number of times access was blocked\")",
+        "ADD_STAT(replacements, statistics::units::Count::get(),\n             \"number of replacements\")"
       ]
     },
     "cache_demand_miss_formula": {
@@ -37,24 +42,59 @@
   },
   "counter_bindings": {
     "l2_overall_accesses": {
-      "stat_selector": "system.l2.overallAccesses::total",
+      "gem5_stat": "system.l2.overallAccesses::total",
       "declaration_ref": "cache_stats_declaration",
       "increment_refs": [
         "cache_overall_access_formula"
       ]
     },
     "l2_demand_accesses": {
-      "stat_selector": "system.l2.demandAccesses::total",
+      "gem5_stat": "system.l2.demandAccesses::total",
       "declaration_ref": "cache_stats_declaration",
       "increment_refs": [
         "cache_demand_access_formula"
       ]
     },
     "l2_demand_misses": {
-      "stat_selector": "system.l2.demandMisses::total",
+      "gem5_stat": "system.l2.demandMisses::total",
       "declaration_ref": "cache_stats_declaration",
       "increment_refs": [
         "cache_demand_miss_formula"
+      ]
+    },
+    "l2_demand_hits": {
+      "gem5_stat": "system.l2.demandHits::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_demand_access_formula"
+      ]
+    },
+    "l2_overall_hits": {
+      "gem5_stat": "system.l2.overallHits::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_overall_access_formula"
+      ]
+    },
+    "l2_overall_misses": {
+      "gem5_stat": "system.l2.overallMisses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_overall_access_formula"
+      ]
+    },
+    "l2_blocked_no_mshrs": {
+      "gem5_stat": "system.l2.blockedCauses::no_mshrs",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_stats_declaration"
+      ]
+    },
+    "l2_replacements": {
+      "gem5_stat": "system.l2.replacements",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_stats_declaration"
       ]
     }
   }

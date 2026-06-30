@@ -10,5 +10,26 @@ FLOW {
         mispredicted =>
             incr branch_mispredicts;
     };
+    switch conditional_prediction {
+        predicted_correct =>
+            incr cond_predicted;
+        predicted_incorrect =>
+            incr cond_predicted;
+            incr cond_incorrect;
+        other =>
+            pass;
+    };
+    switch btb_activity {
+        hit =>
+            incr btb_lookups;
+            incr btb_hits;
+        miss =>
+            incr btb_lookups;
+        mispredicted =>
+            incr btb_lookups;
+            incr btb_mispredicted;
+        other =>
+            pass;
+    };
     done;
 }

@@ -5,6 +5,14 @@
 FLOW {
     incr committed_uops;
     switch op_class {
+        int_alu =>
+            incr committed_int_alu;
+        int_mult =>
+            incr committed_int_mult;
+        int_div =>
+            incr committed_int_div;
+        float_add =>
+            incr committed_float_add;
         mem_read =>
             incr committed_mem_read;
         mem_write =>
@@ -13,6 +21,8 @@ FLOW {
             incr committed_float_mem_read;
         float_mem_write =>
             incr committed_float_mem_write;
+        simd_alu =>
+            incr committed_simd_alu;
         other =>
             pass;
     };

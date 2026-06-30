@@ -7,6 +7,7 @@ FLOW {
         dtlb_read_hit =>
             incr dtlb_accesses;
             incr dtlb_read_accesses;
+            incr dtlb_read_hits;
         dtlb_read_miss =>
             incr dtlb_accesses;
             incr dtlb_misses;
@@ -15,6 +16,7 @@ FLOW {
         dtlb_write_hit =>
             incr dtlb_accesses;
             incr dtlb_write_accesses;
+            incr dtlb_write_hits;
         dtlb_write_miss =>
             incr dtlb_accesses;
             incr dtlb_misses;
@@ -23,11 +25,16 @@ FLOW {
         itlb_inst_hit =>
             incr itlb_accesses;
             incr itlb_inst_accesses;
+            incr itlb_inst_hits;
         itlb_inst_miss =>
             incr itlb_accesses;
             incr itlb_misses;
             incr itlb_inst_accesses;
             incr itlb_inst_misses;
+        dtlb_insert =>
+            incr dtlb_inserts;
+        itlb_insert =>
+            incr itlb_inserts;
     };
     done;
 }

@@ -10,7 +10,10 @@
       "snippets": [
         "ADD_STAT(demandMisses, statistics::units::Count::get(),\n             \"number of demand (read+write) misses\")",
         "ADD_STAT(demandAccesses, statistics::units::Count::get(),\n             \"number of demand (read+write) accesses\")",
-        "ADD_STAT(overallAccesses, statistics::units::Count::get(),\n             \"number of overall (read+write) accesses\")"
+        "ADD_STAT(overallAccesses, statistics::units::Count::get(),\n             \"number of overall (read+write) accesses\")",
+        "ADD_STAT(demandHits, statistics::units::Count::get(),\n             \"number of demand (read+write) hits\")",
+        "ADD_STAT(overallHits, statistics::units::Count::get(),\n             \"number of overall hits\")",
+        "ADD_STAT(overallMisses, statistics::units::Count::get(),\n             \"number of overall misses\")"
       ]
     },
     "cache_demand_miss_formula": {
@@ -37,21 +40,56 @@
   },
   "counter_bindings": {
     "icache_overall_accesses": {
-      "stat_selector": "system.cpu.icache.overallAccesses::total",
+      "gem5_stat": "system.cpu.icache.overallAccesses::total",
       "declaration_ref": "cache_stats_declaration",
       "increment_refs": [
         "cache_overall_access_formula"
       ]
     },
     "icache_demand_accesses": {
-      "stat_selector": "system.cpu.icache.demandAccesses::total",
+      "gem5_stat": "system.cpu.icache.demandAccesses::total",
       "declaration_ref": "cache_stats_declaration",
       "increment_refs": [
         "cache_demand_access_formula"
       ]
     },
     "icache_demand_misses": {
-      "stat_selector": "system.cpu.icache.demandMisses::total",
+      "gem5_stat": "system.cpu.icache.demandMisses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_demand_miss_formula"
+      ]
+    },
+    "icache_demand_hits": {
+      "gem5_stat": "system.cpu.icache.demandHits::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_demand_access_formula"
+      ]
+    },
+    "icache_overall_hits": {
+      "gem5_stat": "system.cpu.icache.overallHits::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_overall_access_formula"
+      ]
+    },
+    "icache_overall_misses": {
+      "gem5_stat": "system.cpu.icache.overallMisses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_overall_access_formula"
+      ]
+    },
+    "icache_read_accesses": {
+      "gem5_stat": "system.cpu.icache.ReadReq.accesses::total",
+      "declaration_ref": "cache_stats_declaration",
+      "increment_refs": [
+        "cache_demand_access_formula"
+      ]
+    },
+    "icache_read_misses": {
+      "gem5_stat": "system.cpu.icache.ReadReq.misses::total",
       "declaration_ref": "cache_stats_declaration",
       "increment_refs": [
         "cache_demand_miss_formula"

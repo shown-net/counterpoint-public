@@ -9,6 +9,8 @@
       "symbol": "BaseCache::CacheCmdStats::CacheCmdStats",
       "snippets": [
         "ADD_STAT(accesses, statistics::units::Count::get(),\n               (\"number of \" + name + \" accesses(hits+misses)\").c_str())",
+        "ADD_STAT(hits, statistics::units::Count::get(),\n               (\"number of \" + name + \" hits\").c_str())",
+        "ADD_STAT(misses, statistics::units::Count::get(),\n               (\"number of \" + name + \" misses\").c_str())",
         "ADD_STAT(mshrMisses, statistics::units::Count::get(),\n               (\"number of \" + name + \" MSHR misses\").c_str())"
       ]
     },
@@ -43,21 +45,56 @@
   },
   "counter_bindings": {
     "l1d_overall_accesses": {
-      "stat_selector": "system.cpu.dcache.overallAccesses::total",
+      "gem5_stat": "system.cpu.dcache.overallAccesses::total",
       "declaration_ref": "cache_overall_stats_declaration",
       "increment_refs": [
         "cache_overall_access_formula"
       ]
     },
     "l1d_read_accesses": {
-      "stat_selector": "system.cpu.dcache.ReadReq.accesses::total",
+      "gem5_stat": "system.cpu.dcache.ReadReq.accesses::total",
       "declaration_ref": "cache_cmd_stats_declaration",
       "increment_refs": [
         "cache_cmd_access_formula"
       ]
     },
     "l1d_read_mshr_misses": {
-      "stat_selector": "system.cpu.dcache.ReadReq.mshrMisses::total",
+      "gem5_stat": "system.cpu.dcache.ReadReq.mshrMisses::total",
+      "declaration_ref": "cache_cmd_stats_declaration",
+      "increment_refs": [
+        "cache_mshr_miss_increment"
+      ]
+    },
+    "l1d_read_hits": {
+      "gem5_stat": "system.cpu.dcache.ReadReq.hits::total",
+      "declaration_ref": "cache_cmd_stats_declaration",
+      "increment_refs": [
+        "cache_cmd_access_formula"
+      ]
+    },
+    "l1d_read_misses": {
+      "gem5_stat": "system.cpu.dcache.ReadReq.misses::total",
+      "declaration_ref": "cache_cmd_stats_declaration",
+      "increment_refs": [
+        "cache_cmd_access_formula"
+      ]
+    },
+    "l1d_write_accesses": {
+      "gem5_stat": "system.cpu.dcache.WriteReq.accesses::total",
+      "declaration_ref": "cache_cmd_stats_declaration",
+      "increment_refs": [
+        "cache_cmd_access_formula"
+      ]
+    },
+    "l1d_write_misses": {
+      "gem5_stat": "system.cpu.dcache.WriteReq.misses::total",
+      "declaration_ref": "cache_cmd_stats_declaration",
+      "increment_refs": [
+        "cache_cmd_access_formula"
+      ]
+    },
+    "l1d_write_mshr_misses": {
+      "gem5_stat": "system.cpu.dcache.WriteReq.mshrMisses::total",
       "declaration_ref": "cache_cmd_stats_declaration",
       "increment_refs": [
         "cache_mshr_miss_increment"

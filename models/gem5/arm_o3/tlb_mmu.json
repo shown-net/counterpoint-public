@@ -8,9 +8,13 @@
       "path": "src/arch/arm/tlb.cc",
       "symbol": "TLB::TlbStats::TlbStats",
       "snippets": [
+        "ADD_STAT(instHits, statistics::units::Count::get(), \"Inst hits\")",
         "ADD_STAT(instMisses, statistics::units::Count::get(), \"Inst misses\")",
+        "ADD_STAT(readHits, statistics::units::Count::get(), \"Read hits\")",
         "ADD_STAT(readMisses, statistics::units::Count::get(),  \"Read misses\")",
+        "ADD_STAT(writeHits, statistics::units::Count::get(), \"Write hits\")",
         "ADD_STAT(writeMisses, statistics::units::Count::get(), \"Write misses\")",
+        "ADD_STAT(inserts, statistics::units::Count::get(), \"Number of times an entry is inserted into the TLB\")",
         "ADD_STAT(readAccesses, statistics::units::Count::get(), \"Read accesses\",\n             readHits + readMisses)",
         "ADD_STAT(writeAccesses, statistics::units::Count::get(), \"Write accesses\",\n             writeHits + writeMisses)",
         "ADD_STAT(instAccesses, statistics::units::Count::get(), \"Inst accesses\",\n             instHits + instMisses)",
@@ -28,14 +32,14 @@
   },
   "counter_bindings": {
     "dtlb_accesses": {
-      "stat_selector": "system.cpu.mmu.dtb.accesses",
+      "gem5_stat": "system.cpu.mmu.dtb.accesses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_stats_declaration"
       ]
     },
     "dtlb_misses": {
-      "stat_selector": "system.cpu.mmu.dtb.misses",
+      "gem5_stat": "system.cpu.mmu.dtb.misses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_stats_declaration",
@@ -43,42 +47,63 @@
       ]
     },
     "dtlb_read_accesses": {
-      "stat_selector": "system.cpu.mmu.dtb.readAccesses",
+      "gem5_stat": "system.cpu.mmu.dtb.readAccesses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_stats_declaration"
       ]
     },
     "dtlb_read_misses": {
-      "stat_selector": "system.cpu.mmu.dtb.readMisses",
+      "gem5_stat": "system.cpu.mmu.dtb.readMisses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_miss_increment"
       ]
     },
+    "dtlb_read_hits": {
+      "gem5_stat": "system.cpu.mmu.dtb.readHits",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
+      ]
+    },
     "dtlb_write_accesses": {
-      "stat_selector": "system.cpu.mmu.dtb.writeAccesses",
+      "gem5_stat": "system.cpu.mmu.dtb.writeAccesses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_stats_declaration"
       ]
     },
     "dtlb_write_misses": {
-      "stat_selector": "system.cpu.mmu.dtb.writeMisses",
+      "gem5_stat": "system.cpu.mmu.dtb.writeMisses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_miss_increment"
       ]
     },
+    "dtlb_write_hits": {
+      "gem5_stat": "system.cpu.mmu.dtb.writeHits",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
+      ]
+    },
+    "dtlb_inserts": {
+      "gem5_stat": "system.cpu.mmu.dtb.inserts",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
+      ]
+    },
     "itlb_accesses": {
-      "stat_selector": "system.cpu.mmu.itb.accesses",
+      "gem5_stat": "system.cpu.mmu.itb.accesses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_stats_declaration"
       ]
     },
     "itlb_misses": {
-      "stat_selector": "system.cpu.mmu.itb.misses",
+      "gem5_stat": "system.cpu.mmu.itb.misses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_stats_declaration",
@@ -86,17 +111,31 @@
       ]
     },
     "itlb_inst_accesses": {
-      "stat_selector": "system.cpu.mmu.itb.instAccesses",
+      "gem5_stat": "system.cpu.mmu.itb.instAccesses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_stats_declaration"
       ]
     },
     "itlb_inst_misses": {
-      "stat_selector": "system.cpu.mmu.itb.instMisses",
+      "gem5_stat": "system.cpu.mmu.itb.instMisses",
       "declaration_ref": "tlb_stats_declaration",
       "increment_refs": [
         "tlb_miss_increment"
+      ]
+    },
+    "itlb_inst_hits": {
+      "gem5_stat": "system.cpu.mmu.itb.instHits",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
+      ]
+    },
+    "itlb_inserts": {
+      "gem5_stat": "system.cpu.mmu.itb.inserts",
+      "declaration_ref": "tlb_stats_declaration",
+      "increment_refs": [
+        "tlb_stats_declaration"
       ]
     }
   }

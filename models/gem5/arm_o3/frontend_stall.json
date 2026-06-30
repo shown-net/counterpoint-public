@@ -45,11 +45,21 @@
       "snippets": [
         "} else if (fetchStatus[tid] == IcacheWaitResponse) {\n        cpu->fetchStats[tid]->icacheStallCycles++;\n        fetchStats.status[IcacheWaitResponse]++;"
       ]
+    },
+    "fetch_status_declaration": {
+      "path": "src/cpu/o3/fetch.cc",
+      "symbol": "Fetch::FetchStats::FetchStats",
+      "snippets": [
+        "ADD_STAT(status, statistics::units::Cycle::get(), \"Number of cycles fetch has run and was not squashing or blocked\")",
+        "ADD_STAT(status, statistics::units::Cycle::get(), \"Number of cycles fetch has spent squashing\")",
+        "ADD_STAT(status, statistics::units::Cycle::get(), \"Number of cycles fetch is waiting for the Icache to respond\")",
+        "ADD_STAT(status, statistics::units::Cycle::get(), \"Number of cycles fetch is waiting for the Icache to retry\")"
+      ]
     }
   },
   "counter_bindings": {
     "core_cycles": {
-      "stat_selector": "system.cpu.numCycles",
+      "gem5_stat": "system.cpu.numCycles",
       "declaration_ref": "base_cpu_cycle_declaration",
       "increment_refs": [
         "o3_cpu_tick_cycle_increment",
@@ -57,11 +67,39 @@
       ]
     },
     "frontend_icache_stall_cycles": {
-      "stat_selector": "system.cpu.fetchStats0.icacheStallCycles",
+      "gem5_stat": "system.cpu.fetchStats0.icacheStallCycles",
       "declaration_ref": "fetch_icache_stall_declaration",
       "increment_refs": [
         "fetch_cache_line_icache_stall_increment",
         "fetch_wait_response_icache_stall_increment"
+      ]
+    },
+    "fetch_running_cycles": {
+      "gem5_stat": "system.cpu.fetch.status::running",
+      "declaration_ref": "fetch_status_declaration",
+      "increment_refs": [
+        "fetch_status_declaration"
+      ]
+    },
+    "fetch_squashing_cycles": {
+      "gem5_stat": "system.cpu.fetch.status::squashing",
+      "declaration_ref": "fetch_status_declaration",
+      "increment_refs": [
+        "fetch_status_declaration"
+      ]
+    },
+    "fetch_icache_wait_response_cycles": {
+      "gem5_stat": "system.cpu.fetch.status::icacheWaitResponse",
+      "declaration_ref": "fetch_status_declaration",
+      "increment_refs": [
+        "fetch_status_declaration"
+      ]
+    },
+    "fetch_icache_wait_retry_cycles": {
+      "gem5_stat": "system.cpu.fetch.status::icacheWaitRetry",
+      "declaration_ref": "fetch_status_declaration",
+      "increment_refs": [
+        "fetch_status_declaration"
       ]
     }
   }
