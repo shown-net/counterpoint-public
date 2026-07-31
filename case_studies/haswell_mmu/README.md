@@ -46,7 +46,7 @@ their own file location.
 Example:
 
 ```bash
-/data00/xuhaoen/py3.13/bin/python -m pip install -e /data00/xuhaoen/counterpoint-gem5
+"${PYTHON:-python3}" -m pip install -e .
 ```
 
 Optional notebook/plotting dependencies for this case study are listed in
@@ -78,8 +78,7 @@ numbers of events.
 Run:
 
 ```bash
-/data00/xuhaoen/py3.13/bin/python \
-  /data00/xuhaoen/counterpoint-gem5/case_studies/haswell_mmu/scripts/run_model_scaling.py
+"${PYTHON:-python3}" case_studies/haswell_mmu/scripts/run_model_scaling.py
 ```
 
 Outputs are written to `case_studies/haswell_mmu/scaling/`.
